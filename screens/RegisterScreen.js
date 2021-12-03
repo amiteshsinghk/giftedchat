@@ -1,9 +1,10 @@
+import { NavigationContainer } from "@react-navigation/native";
 import React, { useState } from "react"
 import { View, StyleSheet } from "react-native"
 import { Input, Button } from "react-native-elements";
 import { auth } from '../firebase';
 
-const RegisterScreen = () => {
+const RegisterScreen = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [imageUrl, setImageUrl] = useState('');
@@ -24,6 +25,8 @@ const RegisterScreen = () => {
                     // ...
                 });
                 // ...
+               navigation.popToTop();
+                // navigation.replace('Chat', { screen: 'ChatScreen' });
             })
             .catch((error) => {
                 var errorCode = error.code;

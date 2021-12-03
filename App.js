@@ -24,8 +24,8 @@ function chatNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Chat" component={ChatScreen} options={{
-        // headerShown:false,
-        headerLeft: () => null
+        headerShown:true,
+        // headerLeft: () => null
       }} />
     </Stack.Navigator>
   );
@@ -43,7 +43,7 @@ export default function App() {
           headerShown: false,
         }} />
         <Stack.Screen name="Chat" component={chatNavigator} options={{
-          // headerShown:false,
+          headerShown:false,
         }} />
       </Stack.Navigator>
     </NavigationContainer>
