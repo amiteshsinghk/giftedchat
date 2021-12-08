@@ -13,6 +13,11 @@ import { auth } from './firebase';
 import Profile from './screens/Profile';
 import ChatsScreen from './screens/ChatsScreen';
 import Contacts from './screens/Contacts';
+import ChatHeader from './components/ChatHeader'
+
+
+import ContextWrapper from "./context/ContextWrapper";
+
 
 const Stack = createStackNavigator();
 
@@ -53,10 +58,7 @@ function chatNavigator() {
         headerShown: true,
         // headerLeft: () => null
       }} />
-      <Stack.Screen name="Chat" component={ChatScreen} options={{
-        headerShown: true,
-        // headerLeft: () => null
-      }} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={{headerTitle: (props) => <ChatHeader {...props} />}}/>
       <Stack.Screen name="contacts" component={Contacts} options={{
         headerShown: true,
         title:"Select Contacts"
@@ -81,6 +83,7 @@ const App = () => {
   }, []);
   
   return (
+    // <ContextWrapper>
     <NavigationContainer>
 
       {!currUser ? (
@@ -112,6 +115,7 @@ const App = () => {
         }} />
       </Stack.Navigator> */}
     </NavigationContainer>
+    // {/* </ContextWrapper> */}
   );
 }
 export default App;

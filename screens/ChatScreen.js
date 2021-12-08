@@ -1,11 +1,12 @@
-import React, { useLayoutEffect,useState, useCallback, useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
+import React, { useLayoutEffect,useState, useCallback, useEffect, useContext } from "react";
 import { View,Text } from "react-native";
 import { auth, db } from "../firebase";
-import{AntDesign} from '@expo/vector-icons'
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Avatar } from "react-native-elements/dist/avatar/Avatar";
-import { GiftedChat } from 'react-native-gifted-chat'
-import { Input } from "react-native-elements/dist/input/Input";
+import "react-native-get-random-values";
+import {nanoid} from "nanoid";
+import GlobalContext from "../context/Context";
+import {doc,collection,} from "@firebase/firestore";
+
 
 // const ChatScreen =({navigation})=>{
 //     const [messages, setMessages] = useState([]);
@@ -88,9 +89,56 @@ import { Input } from "react-native-elements/dist/input/Input";
 // export default ChatScreen
 
 const ChatScreen =({navigation})=>{
+    const{ theme : {colors}} = useContext(GlobalContext)
+const {currentUser} = auth;
+const route= useRoute();
+const room = route.params.room;
+const selectImage = route.params.selectImage;
+const userB = route.params.user;
+const randomId = nanoid()
+const senderUser = currentUser.photoURL 
+? {
+    name : currentUser.displayName,
+    _id: currentUser.uid,
+    avatar: currentUser.photoURL,
+} :{ name : currentUser.displayName, _id:currentUser.uid};
     
-    return(
-         <Text>Chat</Text> 
+const roomId = room ? room.id : randomId
+const roomRef = doc(db,"rooms", roomId)
+const roomMessagesRef = collection(db,"rooms",roomId,"messages");
+
+useEffect(() => {
+    (async() => {
+        if (!room) {
+            const currentUserData={
+                displayName : currentUser.displayName,
+                email : currentUser.email
+            }
+            if (currentUser.photoURL) {
+                currentUserData.photoURL = currentUser.photoURL
+            }
+            const userBData ={
+                displayName : userB.contactName || userB.displayName || "",
+                email : currentUser.email
+            }
+            if (userB.photoURL) {
+                userBData.photoURL =userB.photoURL
+                
+            }
+            try {
+                setDoc
+            } catch (error) {
+                
+            }
+        }
+    })()
+},[])
+
+return(
+        <View>
+
+
+        </View>
     );
 }
 export default ChatScreen

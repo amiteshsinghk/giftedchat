@@ -8,7 +8,7 @@ const LoginScreen =({navigation}) =>{
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const signIn = () =>{
-        console.log('SignIn')
+        // console.log('SignIn')
         auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Signed in
