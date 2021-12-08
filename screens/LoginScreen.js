@@ -22,36 +22,36 @@ const LoginScreen =({navigation}) =>{
           alert(errorMessage)
         });
     }
-    useEffect(() => {
+    // useEffect(() => {
        
-            // if ( auth().currentUser != null) {
-            //     // User is signed in, see docs for a list of available properties
-            //     // https://firebase.google.com/docs/reference/js/firebase.User
-            //     // ...
-            //     console.log('userSignedIn')
-            //     } else {
-            //     // No user is signed in.
-            //     }
+    //         // if ( auth().currentUser != null) {
+    //         //     // User is signed in, see docs for a list of available properties
+    //         //     // https://firebase.google.com/docs/reference/js/firebase.User
+    //         //     // ...
+    //         //     console.log('userSignedIn')
+    //         //     } else {
+    //         //     // No user is signed in.
+    //         //     }
         
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/firebase.User
-              var uid = user.uid;
-              userss = user
-              // ...
-            //   navigation.navigate("ChatScreen")
-            // navigation.navigate("LoginScreen")
+    //     auth.onAuthStateChanged((user) => {
+    //         if (user) {
+    //           // User is signed in, see docs for a list of available properties
+    //           // https://firebase.google.com/docs/reference/js/firebase.User
+    //           var uid = user.uid;
+    //           userss = user
+    //           // ...
+    //         //   navigation.navigate("ChatScreen")
+    //         // navigation.navigate("LoginScreen")
 
-            navigation.replace('Chat', { screen: 'ChatScreen' });
-            } else {
-              // User is signed out
-              // ...
-              navigation.canGoBack() && navigation.popToTop();
-            }
-          });
-        //   return unsubscribe
-    },[]);
+    //         navigation.replace('Chat', { screen: 'ChatScreen' });
+    //         } else {
+    //           // User is signed out
+    //           // ...
+    //           navigation.canGoBack() && navigation.popToTop();
+    //         }
+    //       });
+    //     //   return unsubscribe
+    // },[]);
     return(
         <View style={styles.container}>
             <Input

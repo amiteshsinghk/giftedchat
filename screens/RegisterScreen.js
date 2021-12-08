@@ -16,7 +16,7 @@ const RegisterScreen = ({navigation}) => {
                 var user = userCredential.user;
                 user.updateProfile({
                     displayName: name,
-                    photoURL: imageUrl ? imageUrl : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngtree.com%2Fso%2Favatar&psig=AOvVaw2atZhGWI3hXX7si8WgLzy4&ust=1638527527615000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCIDnuvb0xPQCFQAAAAAdAAAAABAU"
+                    photoURL: imageUrl ? imageUrl : "https://image.shutterstock.com/shutterstock/photos/149083895/display_1500/stock-vector-male-avatar-profile-picture-vector-149083895.jpg"
                 }).then(() => {
                     // Update successful
                     // ...
