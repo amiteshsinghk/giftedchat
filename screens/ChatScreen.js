@@ -1,12 +1,19 @@
 import { useRoute } from "@react-navigation/native";
-import React, { useLayoutEffect,useState, useCallback, useEffect, useContext } from "react";
-import { View,Text } from "react-native";
+import React, { useLayoutEffect, useState, useCallback, useEffect, useContext } from "react";
+import { View, Text, ImageBackground } from "react-native";
 import { auth, db } from "../firebase";
 import "react-native-get-random-values";
-import {nanoid} from "nanoid";
+import { nanoid } from "nanoid";
 import GlobalContext from "../context/Context";
-import {doc,collection,} from "@firebase/firestore";
-
+import {
+    addDoc,
+    collection,
+    doc,
+    onSnapshot,
+    setDoc,
+    updateDoc,
+} from "@firebase/firestore";
+import { GiftedChat } from 'react-native-gifted-chat';
 
 // const ChatScreen =({navigation})=>{
 //     const [messages, setMessages] = useState([]);
@@ -88,57 +95,99 @@ import {doc,collection,} from "@firebase/firestore";
 // }
 // export default ChatScreen
 
-const ChatScreen =({navigation})=>{
-    const{ theme : {colors}} = useContext(GlobalContext)
-const {currentUser} = auth;
-const route= useRoute();
-const room = route.params.room;
-const selectImage = route.params.selectImage;
-const userB = route.params.user;
-const randomId = nanoid()
-const senderUser = currentUser.photoURL 
-? {
-    name : currentUser.displayName,
-    _id: currentUser.uid,
-    avatar: currentUser.photoURL,
-} :{ name : currentUser.displayName, _id:currentUser.uid};
-    
-const roomId = room ? room.id : randomId
-const roomRef = doc(db,"rooms", roomId)
-const roomMessagesRef = collection(db,"rooms",roomId,"messages");
+const ChatScreen = ({ navigation }) => {
+    const [roomHash, setRoomHash] = useState("");
+    const [messages, setMessages] = useState([])
+    const { theme: { colors } } = useContext(GlobalContext);
+    const { currentUser } = auth;
+    const route = useRoute();
+    const room = route.params.room;
+    console.log("room", room)
+    const selectImage = route.params.selectImage;
+    const userB = route.params.user;
+    const randomId = nanoid()
+    const senderUser = currentUser.photoURL
+        ? {
+            name: currentUser.displayName,
+            _id: currentUser.uid,
+            avatar: currentUser.photoURL,
+        } : { name: currentUser.displayName, _id: currentUser.uid };
 
-useEffect(() => {
-    (async() => {
-        if (!room) {
-            const currentUserData={
-                displayName : currentUser.displayName,
-                email : currentUser.email
-            }
-            if (currentUser.photoURL) {
-                currentUserData.photoURL = currentUser.photoURL
-            }
-            const userBData ={
-                displayName : userB.contactName || userB.displayName || "",
-                email : currentUser.email
-            }
-            if (userB.photoURL) {
-                userBData.photoURL =userB.photoURL
-                
-            }
-            try {
-                setDoc
-            } catch (error) {
-                
-            }
-        }
-    })()
-},[])
+    const roomId = room ? room.id : randomId
+    const roomRef = doc(db, "rooms", roomId)
+    const roomMessagesRef = collection(db, "rooms", roomId, "messages");
 
-return(
-        <View>
+    useEffect(() => {
+        (async () => {
+            if (!room) {
+                const currentUserData = {
+                    displayName: currentUser.displayName,
+                    email: currentUser.email
+                }
+                if (currentUser.photoURL) {
+                    currentUserData.photoURL = currentUser.photoURL
+                }
+                const userBData = {
+                    displayName: userB.contactName || userB.displayName || "",
+                    email: userB.email
+                }
+                if (userB.photoURL) {
+                    userBData.photoURL = userB.photoURL
 
+                }
+                const roomData = {
+                    participants: [currentUserData, userBData],
+                    participantsArray: [currentUser.email, userB.email]
+                }
+                try {
+                    await setDoc(roomRef, roomData)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            const emailHash = `${currentUser.email} : ${userB.email}`
+            setRoomHash(emailHash);
+        })()
+    }, []);
 
-        </View>
+    useEffect(() => {
+        const unsubscribe = onSnapshot(roomMessagesRef, querySnapshot => {
+            const messagesFirestore = querySnapshot
+                .docChanges()
+                .filter(({ type }) => type === "added")
+                .map(({ doc }) => {
+                    const message = doc.data()
+                    return { ...message, createdAt: message.createdAt.toDate() }
+                })
+            appendMessages(messagesFirestore)
+        });
+        return () => unsubscribe()
+    }, []);
+
+    const appendMessages = useCallback((messages) => {
+        setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
+    }, [messages]);
+
+    async function onSend(messages = []) {
+        const writes = messages.map(m => addDoc(roomMessagesRef, m))
+        const lastMessage = messages[messages.length - 1]
+        writes.push(updateDoc(roomRef, { lastMessage }))
+        await Promise.all(writes)
+    }
+    return (
+        <ImageBackground
+            resizeMode="cover"
+            source={require("../assets/chatbg.png")}
+            style={{ flex: 1 }}
+        >
+            <GiftedChat
+                onSend={onSend}
+                messages={messages}
+                user={senderUser}
+                renderAvatar={null}
+            />
+
+        </ImageBackground>
     );
 }
 export default ChatScreen

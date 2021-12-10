@@ -5,12 +5,12 @@ import GlobalContext from "../context/Context";
 import { Grid, Row, Col } from 'react-native-easy-grid'
 import Avatar from "./Avatar";
 
-const ListItem = ({ type, description, user, style, time, room, image }) => {
+const ListItem = ({ type, description, user, style, time, room, image,chats }) => {
     const navigation = useNavigation()
     const { theme: { colors } } = useContext(GlobalContext)
     return (
         <TouchableOpacity style={{ height: 80, ...style }} onPress={() =>
-            navigation.navigate("Chat", { user, room, image })
+            chats ?   navigation.navigate("Chat", { user, room, image }) : navigation.replace("Chat", { user, room, image })
         }>
             <Grid style={{ maxHeight: 80 }}>
                 <Col style={{ width: 80, alignItems: "center", justifyContent: "center" }} >
