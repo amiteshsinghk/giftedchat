@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { View, StyleSheet } from "react-native"
 import { Input,Button } from "react-native-elements";
 import{auth} from '../firebase';
+import Context from '../context/Context';
+import { theme } from "../utils";
 
 const LoginScreen =({navigation}) =>{
-    var userss
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { theme: { colors }, } = useContext(Context);
     const signIn = () =>{
-        // console.log('SignIn')
         auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Signed in
           var user = userCredential.user;
-
           // ...
         })
         .catch((error) => {
@@ -57,9 +57,14 @@ const LoginScreen =({navigation}) =>{
             <Input
             placeholder ="Enter your Email"
             label="Email"
-            leftIcon ={{type:'material', name:'email'}}
+            leftIcon ={{type:'material', name:'email',iconStyle:{
+                color:theme.colors.iconGray
+            }}}
             value={email}
             onChangeText = {text => setEmail(text)}
+            // style={{
+            //     borderBottomColor : theme.colors.secondary
+            // }}
             />
             <Input
             placeholder ="Enter your Password"
@@ -82,14 +87,15 @@ export default LoginScreen
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        alignItems:"center",
         justifyContent:"center",
-        padding:10
+        padding:10,
+        // borderBottomColor: theme.colors.primary,
+        borderBottomWidth: 2,
+        backgroundColor: theme.colors.background
     },
     buttons:{
-        width:200,
         marginTop:10,
+        backgroundColor :theme.colors.secondary
         
     },
-   
 })

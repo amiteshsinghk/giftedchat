@@ -12,6 +12,8 @@ import {
     onSnapshot,
     setDoc,
     updateDoc,
+    orderBy,
+    query,
 } from "@firebase/firestore";
 import { GiftedChat } from 'react-native-gifted-chat';
 
@@ -151,14 +153,24 @@ const ChatScreen = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(roomMessagesRef, querySnapshot => {
+        // const ref= roomMessagesRef.orderBy('createdAt','desc');
+        const q = query(roomMessagesRef, orderBy('createdAt','desc'));
+        const unsubscribe = onSnapshot(q, querySnapshot => {
+            
             const messagesFirestore = querySnapshot
                 .docChanges()
                 .filter(({ type }) => type === "added")
                 .map(({ doc }) => {
                     const message = doc.data()
                     return { ...message, createdAt: message.createdAt.toDate() }
-                })
+                    // let t = { ...message, createdAt: message.createdAt.toDate() }
+                    // console.log("ttttt", t);
+                    // return t
+
+                }).sort((b,a) => a.createdAt.getTime() - b.createdAt.getTime() )
+
+                // console.log("messagesFirestore", messagesFirestore);
+                
             appendMessages(messagesFirestore)
         });
         return () => unsubscribe()
@@ -169,11 +181,15 @@ const ChatScreen = ({ navigation }) => {
     }, [messages]);
 
     async function onSend(messages = []) {
+        // console.log("messages", messages)
         const writes = messages.map(m => addDoc(roomMessagesRef, m))
         const lastMessage = messages[messages.length - 1]
+        console.log("lastMessage", lastMessage)
         writes.push(updateDoc(roomRef, { lastMessage }))
         await Promise.all(writes)
     }
+    
+    console.log("messages", messages)
     return (
         <ImageBackground
             resizeMode="cover"
