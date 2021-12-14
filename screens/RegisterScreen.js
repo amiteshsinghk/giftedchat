@@ -1,14 +1,17 @@
 import { NavigationContainer } from "@react-navigation/native";
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { View, StyleSheet } from "react-native"
 import { Input, Button } from "react-native-elements";
 import { auth } from '../firebase';
+import { theme } from "../utils";
+import Context from '../context/Context';
 
 const RegisterScreen = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [password, setPassword] = useState('');
+    const {theme :{colors}} = useContext(Context);
     const resgister = () => {
         auth.createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
@@ -66,7 +69,7 @@ const RegisterScreen = ({navigation}) => {
                 value={imageUrl}
                 onChangeText={text => setImageUrl(text)}
             />
-            <Button title="register" style={styles.buttons} onPress={resgister} />
+            <Button title="Register" buttonStyle={styles.buttons} onPress={resgister} />
         </View>
     )
 }
@@ -74,12 +77,13 @@ const RegisterScreen = ({navigation}) => {
 export default RegisterScreen
 const styles = StyleSheet.create({
     buttons: {
-        width: 100,
         marginTop: 10,
+        backgroundColor :theme.colors.secondary,
     },
     container: {
         flex: 1,
         alignContent: "center",
-        padding: 10
+        padding: 10,
+        backgroundColor: theme.colors.background
     }
 })
