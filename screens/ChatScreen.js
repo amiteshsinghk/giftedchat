@@ -104,7 +104,7 @@ const ChatScreen = ({ navigation }) => {
     const { currentUser } = auth;
     const route = useRoute();
     const room = route.params.room;
-    console.log("room", room)
+    // console.log("room", room)
     const selectImage = route.params.selectImage;
     const userB = route.params.user;
     const randomId = nanoid()

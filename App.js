@@ -26,6 +26,7 @@ LogBox.ignoreLogs([
   "Setting a timer",
   "AsyncStorage has been extracted from react-native core and will be removed in a future release.",
 ]);
+let photoUrlUser =null;
 
 function loginNavigator() {
   return (
@@ -57,6 +58,32 @@ function loginNavigator() {
 function chatNavigator() {
   return (
     <Stack.Navigator>
+      {/* <Stack.Screen name="Profile" component={Profile} options={{
+        headerShown: true,
+        headerStyle :{
+          backgroundColor : theme.colors.primary
+        },
+        headerTitleStyle:{
+          color: theme.colors.white
+        },
+        headerTintColor: theme.colors.white
+      }} /> */}
+
+{/* {!currUser.photoURL && (
+            <Stack.Screen name="Profile" component={Profile} options={{
+              headerShown: true,
+              headerStyle :{
+                backgroundColor : theme.colors.primary
+              },
+              headerTitleStyle:{
+                color: theme.colors.white
+              },
+              headerTintColor: theme.colors.white
+            }} />
+          )} */}
+      {photoUrlUser &&  console.log("photoUrlUser",photoUrlUser.photoURL)
+    
+      }
        <Stack.Screen name="Chats" component={ChatsScreen} options={{
         headerShown: true,
         headerStyle :{
@@ -93,14 +120,15 @@ function chatNavigator() {
   );
 }
 const App = () => {
-  const [currUser, setCurreUser] = useState(null)
   const [loading, setLoading] = useState(true);
   const { theme: { colors }, } = useContext(Context);
+  const [currUser, setCurreUser] = useState(null);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
       setLoading(false);
       if (user) {
-        setCurreUser(user)
+        setCurreUser(user);
       }
     })
     return () => unsubscribe();
@@ -110,6 +138,7 @@ const App = () => {
   }
   return (
     <NavigationContainer>
+      {/* {console.log("photoURLgvgvgggg",currUser.photoURL)} */}
       {!currUser ? (
         <Stack.Navigator>
           <Stack.Screen name="Register" component={loginNavigator} options={{
@@ -119,9 +148,52 @@ const App = () => {
         </Stack.Navigator>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen name="Chatt" component={chatNavigator} options={{
-            headerShown: false,
-          }} />
+          {console.log("currUser.photoURL",currUser)}
+         {!currUser.photoURL && (
+            <Stack.Screen name="Profile" component={Profile} options={{
+              headerShown: true,
+              headerStyle :{
+                backgroundColor : theme.colors.primary
+              },
+              headerTitleStyle:{
+                color: theme.colors.white
+              },
+              headerTintColor: theme.colors.white
+            }} />
+          )}
+
+<Stack.Screen name="Chats" component={ChatsScreen} options={{
+        headerShown: true,
+        headerStyle :{
+          backgroundColor : theme.colors.primary
+        },
+        headerTitleStyle:{
+          color: theme.colors.white
+        },
+        headerTintColor: theme.colors.white
+      }} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={{headerTitle: (props) => <ChatHeader {...props} />,
+      headerStyle :{
+      backgroundColor : theme.colors.primary,
+    },
+    headerTitleStyle:{
+      color: theme.colors.white
+    },
+    headerTintColor: theme.colors.white
+    }}/>
+      <Stack.Screen name="contacts" component={Contacts} options={{
+        headerShown: true,
+        title:"Select Contacts",
+        headerStyle :{
+          backgroundColor : theme.colors.primary
+        },
+        headerTitleStyle:{
+          color: theme.colors.white
+        },
+        headerTintColor: theme.colors.white
+
+      }} />
+         
         </Stack.Navigator>
       )
       }

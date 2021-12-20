@@ -1,10 +1,11 @@
 import { NavigationContainer } from "@react-navigation/native";
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { View, StyleSheet } from "react-native"
 import { Input, Button } from "react-native-elements";
 import { auth } from '../firebase';
 import { theme } from "../utils";
 import Context from '../context/Context';
+import { pickImage, askForPermission, uploadImage } from "../utils";
 
 const RegisterScreen = ({navigation}) => {
     const [email, setEmail] = useState('');
@@ -12,6 +13,14 @@ const RegisterScreen = ({navigation}) => {
     const [imageUrl, setImageUrl] = useState('');
     const [password, setPassword] = useState('');
     const {theme :{colors}} = useContext(Context);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [permissionStatus, setPermissionStatus] = useState(null);
+    useEffect(() => {
+        (async () => {
+          const status = await askForPermission();
+          setPermissionStatus(status);
+        })();
+      }, []);
     const resgister = () => {
         auth.createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
@@ -19,7 +28,7 @@ const RegisterScreen = ({navigation}) => {
                 var user = userCredential.user;
                 user.updateProfile({
                     displayName: name,
-                    photoURL: imageUrl ? imageUrl : "https://image.shutterstock.com/shutterstock/photos/149083895/display_1500/stock-vector-male-avatar-profile-picture-vector-149083895.jpg"
+                    // photoURL: imageUrl ? imageUrl : "https://image.shutterstock.com/shutterstock/photos/149083895/display_1500/stock-vector-male-avatar-profile-picture-vector-149083895.jpg"
                 }).then(() => {
                     // Update successful
                     // ...
@@ -38,6 +47,13 @@ const RegisterScreen = ({navigation}) => {
                 // ..
             });
     }
+
+    async function handleProfilePicture() {
+        const result = await pickImage();
+        if (!result.cancelled) {
+          setSelectedImage(result.uri);
+        }
+      }
     return (
         <View style={styles.container}>
             <Input
@@ -62,13 +78,14 @@ const RegisterScreen = ({navigation}) => {
                 onChangeText={text => setPassword(text)}
                 secureTextEntry
             />
-            <Input
+            {/* <Input
                 placeholder="Enter your image Url"
                 label="Profile Picture"
                 leftIcon={{ type: 'material', name: 'face' }}
                 value={imageUrl}
                 onChangeText={text => setImageUrl(text)}
-            />
+            /> */}
+            {/* <Button title="Select Profile Picture" buttonStyle={styles.buttons} onPress={resgister} /> */}
             <Button title="Register" buttonStyle={styles.buttons} onPress={resgister} />
         </View>
     )
