@@ -26,31 +26,31 @@ LogBox.ignoreLogs([
   "Setting a timer",
   "AsyncStorage has been extracted from react-native core and will be removed in a future release.",
 ]);
-let photoUrlUser =null;
+let photoUrlUser = null;
 
 function loginNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Login" component={LoginScreen} options={{
         headerShown: true,
-        headerStyle :{
-          backgroundColor : theme.colors.primary
+        headerStyle: {
+          backgroundColor: theme.colors.primary
         },
-        headerTitleStyle:{
+        headerTitleStyle: {
           color: theme.colors.white
         },
         headerTintColor: theme.colors.white
-      }}/>
-        <Stack.Screen name="Register" component={RegisterScreen} options={{
-          headerShown: true,
-          headerStyle :{
-            backgroundColor : theme.colors.primary,
-          },
-          headerTitleStyle:{
-            color: theme.colors.white
-          },
-          headerTintColor: theme.colors.white
-        }}/>
+      }} />
+      <Stack.Screen name="Register" component={RegisterScreen} options={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: theme.colors.primary,
+        },
+        headerTitleStyle: {
+          color: theme.colors.white
+        },
+        headerTintColor: theme.colors.white
+      }} />
     </Stack.Navigator>
   );
 }
@@ -69,7 +69,7 @@ function chatNavigator() {
         headerTintColor: theme.colors.white
       }} /> */}
 
-{/* {!currUser.photoURL && (
+      {/* {!currUser.photoURL && (
             <Stack.Screen name="Profile" component={Profile} options={{
               headerShown: true,
               headerStyle :{
@@ -81,41 +81,42 @@ function chatNavigator() {
               headerTintColor: theme.colors.white
             }} />
           )} */}
-      {photoUrlUser &&  console.log("photoUrlUser",photoUrlUser.photoURL)
-    
+   //   {photoUrlUser && console.log("photoUrlUser", photoUrlUser.photoURL)
+
       }
-       <Stack.Screen name="Chats" component={ChatsScreen} options={{
+      <Stack.Screen name="Chats" component={ChatsScreen} options={{
         headerShown: true,
-        headerStyle :{
-          backgroundColor : theme.colors.primary
+        headerStyle: {
+          backgroundColor: theme.colors.primary
         },
-        headerTitleStyle:{
+        headerTitleStyle: {
           color: theme.colors.white
         },
         headerTintColor: theme.colors.white
       }} />
-      <Stack.Screen name="Chat" component={ChatScreen} options={{headerTitle: (props) => <ChatHeader {...props} />,
-      headerStyle :{
-      backgroundColor : theme.colors.primary,
-    },
-    headerTitleStyle:{
-      color: theme.colors.white
-    },
-    headerTintColor: theme.colors.white
-    }}/>
+      <Stack.Screen name="Chat" component={ChatScreen} options={{
+        headerTitle: (props) => <ChatHeader {...props} />,
+        headerStyle: {
+          backgroundColor: theme.colors.primary,
+        },
+        headerTitleStyle: {
+          color: theme.colors.white
+        },
+        headerTintColor: theme.colors.white
+      }} />
       <Stack.Screen name="contacts" component={Contacts} options={{
         headerShown: true,
-        title:"Select Contacts",
-        headerStyle :{
-          backgroundColor : theme.colors.primary
+        title: "Select Contacts",
+        headerStyle: {
+          backgroundColor: theme.colors.primary
         },
-        headerTitleStyle:{
+        headerTitleStyle: {
           color: theme.colors.white
         },
         headerTintColor: theme.colors.white
 
       }} />
-     
+
     </Stack.Navigator>
   );
 }
@@ -148,56 +149,57 @@ const App = () => {
         </Stack.Navigator>
       ) : (
         <Stack.Navigator>
-          {console.log("currUser.photoURL",currUser)}
-         {!currUser.photoURL && (
+          {console.log("currUser.photoURL", currUser)}
+          {!currUser.photoURL && (
             <Stack.Screen name="Profile" component={Profile} options={{
               headerShown: true,
-              headerStyle :{
-                backgroundColor : theme.colors.primary
+              headerStyle: {
+                backgroundColor: theme.colors.primary
               },
-              headerTitleStyle:{
+              headerTitleStyle: {
                 color: theme.colors.white
               },
               headerTintColor: theme.colors.white
             }} />
           )}
 
-<Stack.Screen name="Chats" component={ChatsScreen} options={{
-        headerShown: true,
-        headerStyle :{
-          backgroundColor : theme.colors.primary
-        },
-        headerTitleStyle:{
-          color: theme.colors.white
-        },
-        headerTintColor: theme.colors.white
-      }} />
-      <Stack.Screen name="Chat" component={ChatScreen} options={{headerTitle: (props) => <ChatHeader {...props} />,
-      headerStyle :{
-      backgroundColor : theme.colors.primary,
-    },
-    headerTitleStyle:{
-      color: theme.colors.white
-    },
-    headerTintColor: theme.colors.white
-    }}/>
-      <Stack.Screen name="contacts" component={Contacts} options={{
-        headerShown: true,
-        title:"Select Contacts",
-        headerStyle :{
-          backgroundColor : theme.colors.primary
-        },
-        headerTitleStyle:{
-          color: theme.colors.white
-        },
-        headerTintColor: theme.colors.white
+          <Stack.Screen name="Chats" component={ChatsScreen} options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: theme.colors.primary
+            },
+            headerTitleStyle: {
+              color: theme.colors.white
+            },
+            headerTintColor: theme.colors.white
+          }} />
+          <Stack.Screen name="Chat" component={ChatScreen} options={{
+            headerTitle: (props) => <ChatHeader {...props} />,
+            headerStyle: {
+              backgroundColor: theme.colors.primary,
+            },
+            headerTitleStyle: {
+              color: theme.colors.white
+            },
+            headerTintColor: theme.colors.white
+          }} />
+          <Stack.Screen name="contacts" component={Contacts} options={{
+            headerShown: true,
+            title: "Select Contacts",
+            headerStyle: {
+              backgroundColor: theme.colors.primary
+            },
+            headerTitleStyle: {
+              color: theme.colors.white
+            },
+            headerTintColor: theme.colors.white
 
-      }} />
-         
+          }} />
+
         </Stack.Navigator>
       )
       }
-    
+
     </NavigationContainer>
   );
 }

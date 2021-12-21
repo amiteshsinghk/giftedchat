@@ -18,6 +18,7 @@ import { updateProfile } from "@firebase/auth";
 import { doc, setDoc } from "@firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { theme } from "../utils";
+import { updateCurrentUser } from "firebase/auth";
 
 
 const Profile = () => {
@@ -26,12 +27,12 @@ const Profile = () => {
     const navigation = useNavigation();
     const user = auth.currentUser;
     var imageFlag = false;
-    // useEffect(() => {
-    //     (async () => {
-    //         const status = await askForPermission();
-    //         setPermissionStatus(status);
-    //     })();
-    // }, []);
+    useEffect(() => {
+        (async () => {
+            const status = await askForPermission();
+            setPermissionStatus(status);
+        })();
+    }, []);
     useEffect(() =>{
         if (user.photoURL) {
             setSelectedImage( user.photoURL);
@@ -45,13 +46,13 @@ const Profile = () => {
     //     return <Text>You need to allow this permission</Text>;
     //   }
     async function handleProfilePicture() {
-        console.log("permissionStatus", permissionStatus)
+        // console.log("permissionStatus", permissionStatus)
         if (permissionStatus == "granted") {
             const result = await pickImage();
             if (!result.cancelled) {
                 setSelectedImage(result.uri);
                 imageFlag = true
-                console.log("selectedImage", result.uri);
+                // console.log("selectedImage", result.uri);
             }
         } else {
             const status = await askForPermission();
@@ -68,24 +69,30 @@ const Profile = () => {
                 "profilePicture"
             );
             photoURL = url;
+            // console.log("photoURLphoto===>",photoURL);
+        //     user.photoURL = photoURL;
+        //  await updateCurrentUser(auth, user );
         };
-        const userData = {};
+        const userData = {
+            displayName : user.displayName,
+            email: user.email,
+        };
         if (photoURL) {
             userData.photoURL = photoURL;
         }
         <Text>Uploading Image</Text>
-        console.log("flag", imageFlag )
-        if (imageFlag) {
-            console.log("imageFlagIf", imageFlag)
+        // console.log("flag", imageFlag )
+        // if (imageFlag) {
+            console.log("userData===>", userData)
             await Promise.all([
                 updateProfile(user,userData),
                 setDoc(doc(db,"users",user.uid),{...userData, uid: user.uid}),
             ]);
-        }else {
-            console.log("imageFlagElse", imageFlag)
-            navigation.navigate("Chats");
-            // navigation.replace("Chats");
-        }
+        // }else {
+            // console.log("imageFlagElse", imageFlag)
+            // navigation.navigate("Chats");
+            navigation.replace("Chats");
+        // }
         
         
     }
