@@ -3,10 +3,22 @@ import "react-native-get-random-values";
 import { nanoid }from 'nanoid'
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
 import { storage } from "./firebase"
+// export async function pickImage() {
+//   let result = ImagePicker.launchCameraAsync();
+//   return result;
+// }
+
 export async function pickImage() {
-  let result = ImagePicker.launchCameraAsync();
+  let options = {
+    mediaType: 'photo',
+    quality : 0,
+    maxHeight: 300, //any number lesser will resize the image to a lower quality
+    maxWidth : 300
+};
+  let result = ImagePicker.launchCameraAsync(options);
   return result;
 }
+
 export async function askForPermission() {
   const { status } = await ImagePicker.requestCameraPermissionsAsync();
   return status;
