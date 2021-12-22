@@ -13,7 +13,7 @@ const route = useRoute();
 const image = route.params && route.params.image;
 return (
   <FlatList
-    style={{ flex: 1, padding: 10 }}
+    style={{ flex: 1,paddingStart:10,paddingEnd:10, paddingTop:10, paddingBottom:25, marginBottom:10 }}
     data={contacts}
     keyExtractor={(_, i) => i}
     renderItem={({ item }) => <ContactPreview contact={item} image={image} />}
