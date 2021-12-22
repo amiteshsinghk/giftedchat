@@ -15,7 +15,11 @@ import {
     orderBy,
     query,
 } from "@firebase/firestore";
-import { GiftedChat } from 'react-native-gifted-chat';
+import { Actions, Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { pickImage, uploadImage } from "../utils";
+import { ScreenStackHeaderBackButtonImage } from "react-native-screens";
 
 // const ChatScreen =({navigation})=>{
 //     const [messages, setMessages] = useState([]);
@@ -188,6 +192,33 @@ const ChatScreen = ({ navigation }) => {
         writes.push(updateDoc(roomRef, { lastMessage }))
         await Promise.all(writes)
     }
+
+    async function sendImage(uri, roomPath) {
+        const { url, fileName } = await uploadImage(
+          uri,
+          `images/rooms/${roomPath || roomHash}`
+        );
+        const message = {
+          _id: fileName,
+          text: "",
+          createdAt: new Date(),
+          user: senderUser,
+          image: url,
+        };
+        const lastMessage = { ...message, text: "Image" };
+        await Promise.all([
+          addDoc(roomMessagesRef, message),
+          updateDoc(roomRef, { lastMessage }),
+        ]);
+      }
+
+    async function handlePhotoPicker() {
+        const result = await pickImage();
+        if (!result.cancelled) {
+          await sendImage(result.uri);
+        }
+        
+    }
     
     console.log("messages", messages)
     return (
@@ -201,6 +232,86 @@ const ChatScreen = ({ navigation }) => {
                 messages={messages}
                 user={senderUser}
                 renderAvatar={null}
+                renderActions ={(props) =>(
+                    <Actions
+                    {...props}
+                    containerStyle={{
+                        position:"absolute",
+                        right:50,
+                        bottom:5,
+                        zIndex:9999,
+                    }}
+                    onPressActionButton={handlePhotoPicker}
+                    icon={()=>(
+                        <Ionicons name ="camera" size ={30} color={colors.iconGray}/>
+                    )}
+                    />
+                )}
+                timeTextStyle={{right:{color : colors.iconGray}}}
+                renderSend={(props) =>{
+                    const{text, messageIdGenerator, user, onSend} = props;
+                    return(
+                    <TouchableOpacity
+                        style={{
+                            height : 40,
+                            width: 40,
+                            borderRadius: 40,
+                            backgroundColor : colors.primary,
+                            alignItems:"center",
+                            justifyContent:"center",
+                            marginBottom:5,
+                        }}
+                        onPress={()=>{
+                            if(text && onSend){
+                                onSend({
+                                    text : text.trim(),
+                                    user,
+                                    _id:messageIdGenerator(),
+                                }, 
+                                true
+                                );
+                            }
+                        }}
+                        >
+                        <Ionicons name="send" size={20} color={colors.white}/>
+                        </TouchableOpacity>
+                    );
+                }}
+                renderInputToolbar ={(props)=>(
+                   <InputToolbar
+                   {...props}
+                   containerStyle={{
+                    marginLeft: 10,
+                    marginRight: 10,
+                    marginBottom: 2,
+                    borderRadius: 20,
+                    paddingTop: 5,
+                   }} 
+                   />
+                )}
+                renderBubble ={(props) =>(
+                    <Bubble
+                    {... props}
+                    textStyle={{ right : {color: colors.text}}}
+                    wrapperStyle={{
+                        left:{
+                            background : colors.white,
+                        },
+                        right:{
+                            backgroundColor:colors.tertiary,
+                        },
+                    }}
+                    />
+                )}
+                // renderMessageImage={(props) =>{
+                //     return(
+                //         <View>
+
+                //         </View>
+                //     );
+                // }}
+
+
             />
 
         </ImageBackground>

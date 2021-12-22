@@ -11,7 +11,7 @@ import { storage } from "./firebase"
 export async function pickImage() {
   let options = {
     mediaType: 'photo',
-    quality : 0,
+    quality : 1,
     maxHeight: 300, //any number lesser will resize the image to a lower quality
     maxWidth : 300
 };

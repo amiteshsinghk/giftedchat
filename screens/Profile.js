@@ -69,9 +69,6 @@ const Profile = () => {
                 "profilePicture"
             );
             photoURL = url;
-            // console.log("photoURLphoto===>",photoURL);
-        //     user.photoURL = photoURL;
-        //  await updateCurrentUser(auth, user );
         };
         const userData = {
             displayName : user.displayName,
